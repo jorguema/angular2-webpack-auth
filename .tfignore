@@ -1,0 +1,14 @@
+dll
+ico
+rpt
+xml
+
+
+node_modules
+dist
+doc
+coverage
+
+
+## Ignore the NuGet packages folder in the root of the repository
+packages

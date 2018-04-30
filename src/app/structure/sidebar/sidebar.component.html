@@ -1,0 +1,16 @@
+<aside class="aside card" [hidden]="hideSidebar()">
+    <ul class="aside__ul">
+        <li class="aside__ul_link" routerLinkActive="aside__ul_backactive">
+            <a [routerLink]="['countries']" routerLinkActive="aside__ul_linkactive" class="text-uppercase">
+                <i class="material-icons">language</i>
+                <span>Paises</span>
+            </a>
+        </li>
+        <li class="aside__ul_link" routerLinkActive="aside__ul_backactive">
+            <a [routerLink]="['ports']" routerLinkActive="aside__ul_linkactive" class="text-uppercase">
+                <i class="material-icons">store</i>
+                <span>Puertos</span>
+            </a>
+        </li>
+    </ul>
+</aside>

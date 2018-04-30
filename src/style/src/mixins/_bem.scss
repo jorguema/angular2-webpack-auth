@@ -1,0 +1,273 @@
+// ==============================
+// 
+//         Mixins - BEM
+//
+// ============================== 
+
+// Initialize bem-sass
+// @author  Yum<ym.jsng@gmail.com>
+// @acess   public
+@mixin init-bem-sass {
+
+  @if is-bem-sass-initialized() {
+    @error "bem-sass is already initialized";
+  } 
+
+  $__bem-sass__: (
+
+    // To check immutability of BEM entities
+    logged-entities: (), 
+  
+    // To check order of block levels
+    logged-block-levels: (), 
+
+    // To check uniqueness of shared rules
+    logged-shared-rules: (),
+
+    // A storage for block prefixes
+    logged-prefixes: (),
+
+    // configurations
+    config: (
+      default-prefix: unquote(""),
+      block-levels: (),
+      element-sep: unquote("__"),
+      modifier-sep: unquote("_")
+    ),
+
+    state: (
+      configured: false
+    )
+
+  ) !global;
+}
+
+// Configure bem-sass options 
+// @author  Yum<ym.jsng@gmail.com>
+// @acess   public
+// @param   {Map} $options
+@mixin configure-bem-sass($options:null) { 
+
+  @if is-bem-sass-configured() { @error "bem-sass is already configured"; } 
+
+  @if $options { 
+    $options: unquote-map-values($options); 
+
+    // Store default-prefix to logged-prefixes;
+    @if (
+      map-has-key($options, "default-prefix") and 
+      bem-sass-add("logged-prefixes", map-get($options, "default-prefix"))
+    ) {};
+
+    // Store prefixes of block types to logged-prefixes;
+    @if (map-has-key($options, "block-levels")) {
+      @each $prefix in map-values(map-get($options, "block-levels")) {
+        @if (bem-sass-add("logged-prefixes", $prefix)) {};
+      }
+    }; 
+
+    @if (
+      bem-sass-set("config", map-merge(bem-sass-get("config"), $options)) and
+      bem-sass-set("state" "configured", true)
+    ) {};
+  } 
+} 
+
+
+// Generate BEM block selector 
+// @author  Yum<ym.jsng@gmail.com>
+// @acess   public
+// @param   {String} $name -  name of the block
+// @param   {String} $type - type of the block
+// @example
+//  @include block(promo) {
+//    ...styles here...
+//  }
+//  @include block(media, "object") {
+//    ...styles here...
+//  }
+@mixin block($name, $level:null) {
+
+  $selector-string: create-selector("block", $name, (level: $level));
+
+  @if bem-sass-exists(logged-entities, $selector-string) {
+    @error "Attempt to reassign `#{$selector-string}`"
+  } 
+
+  @if validate-block-level-order($level, $name) {} 
+
+  @if (
+    bem-sass-add(logged-entities, $selector-string) and 
+    bem-sass-add(logged-block-levels, $level, $level == null)
+  ) {
+    #{$selector-string} {
+      @content;
+    }
+  };
+
+}
+
+
+// Generate BEM element selector 
+// @acess   public
+// @author  Yum<ym.jsng@gmail.com>
+// @param   {String} $name 
+@mixin element($name) { 
+
+  @if (not &) { @error "element should be inside of a block" } 
+  @if (is-a-bem(element, &)) { @error "element should not be within another element" }
+
+  @at-root {
+    $selector-string: create-selector("element", $name, (in-a-modifier: is-a-bem(modifier, &)));
+
+    @if bem-sass-exists(logged-entities, $selector-string) {
+      @error "Attempt to reassign `#{$selector-string}`"
+    }
+
+    @if (bem-sass-add(logged-entities, $selector-string)) {
+      #{$selector-string} {
+        @content;
+      }
+    }
+  }
+}
+
+
+// Generate BEM modifier selector 
+// @acess   public
+// @author  Yum<ym.jsng@gmail.com>
+// @param   {String} $name 
+@mixin modifier($name, $value: null) { 
+
+  @if (not &) { @error "modifier should be inside of a block" }
+  @if (is-a-bem(modifier, &)) { @error "modifier should not be within another modifier" }
+
+  @at-root {
+    $selector-string: create-selector("modifier", $name, (value: $value, in-an-element: is-a-bem(element, &)));
+    
+    @if bem-sass-exists(logged-entities, $selector-string) {
+      @error "Attempt to reassign `#{$selector-string}`"
+    }
+
+    @if bem-sass-add(logged-entities, $selector-string) {
+      #{$selector-string} {
+        @content;
+      }
+    }
+  }
+}
+
+// Generate adjacent sibling selector of an element in a given modifier context
+// @acess   public
+// @author  Yum<ym.jsng@gmail.com>
+// @example
+//
+//  In scss:
+//
+//  @include block(list) {
+//    @include modifier(ver, 2) {
+//      @include element(item) {
+//        @include adjacent-siblings {
+//          border-top: 1px solid rgb(0, 0, 0);
+//        }
+//      }
+//    }
+//  }
+//
+//  When compiled:
+//
+//  .list_ver_2 .list__item + .list__item {
+//    border-top: 1px solid rgb(0, 0, 0);
+//  }
+//
+@mixin adjacent-siblings {
+
+  @if (not &) { @error "No context given"; } 
+  @if (str-index(inspect(&), " ") == null) {
+    @error "mixin `adjacent-siblings` is declared in invalid position";
+  }
+
+  $element: selector-to-string(
+    str-slice(
+      inspect(&), 
+      str-index(inspect(&), " ") + 3
+    )
+  );
+
+  & + #{$element} {
+    @content;
+  }
+} 
+
+
+// Define common css rules to be shared with entities inside a given block
+// @acess   public
+// @author  Yum<ym.jsng@gmail.com>
+// @param   {String} $name
+@mixin def-shared-rules($name) {
+
+  @if (not &) { @error "`def-shared-rules` should be inside of a block"; }
+
+  $context: &; 
+  $selector-string: create-selector("shared-rule", $name, (context: $context)); 
+
+  @if bem-sass-exists(logged-shared-rules, $selector-string) {
+    @error "Attempt to reassign the shared rule `#{$name}` in `#{get-block($context)}`"
+  }
+
+  @if (bem-sass-add(logged-shared-rules, $selector-string)) {
+    @at-root #{create-selector("shared-rule", $name, (context: $context))} {
+      @content
+    }
+  }
+
+}
+
+
+// Get common css rules inside a given block
+// @acess   public
+// @author  Yum<ym.jsng@gmail.com>
+// @param   {String} $name
+@mixin shared-rules($name) {
+  $context: &; 
+  @if (not $context) { @error "`rules` should be inside of a block"; } 
+
+  $selector-string: create-selector("shared-rule", $name, (context: $context)); 
+  @if (not bem-sass-exists("logged-shared-rules", $selector-string)) {
+    @error "There are no shared rule `#{$name}` in `#{get-block($context)}`";
+  }
+
+  @extend #{$selector-string};
+}
+
+
+@mixin transition($transition...) {
+  -moz-transition:    $transition;
+  -o-transition:      $transition;
+  -webkit-transition: $transition;
+  transition:         $transition;
+}
+@mixin transition-property($property...) {
+  -moz-transition-property:    $property;
+  -o-transition-property:      $property;
+  -webkit-transition-property: $property;
+  transition-property:         $property;
+}
+@mixin transition-duration($duration...) {
+  -moz-transition-property:    $duration;
+  -o-transition-property:      $duration;
+  -webkit-transition-property: $duration;
+  transition-property:         $duration;
+}
+@mixin transition-timing-function($timing...) {
+  -moz-transition-timing-function:    $timing;
+  -o-transition-timing-function:      $timing;
+  -webkit-transition-timing-function: $timing;
+  transition-timing-function:         $timing;
+}
+@mixin transition-delay($delay...) {
+  -moz-transition-delay:    $delay;
+  -o-transition-delay:      $delay;
+  -webkit-transition-delay: $delay;
+  transition-delay:         $delay;
+}

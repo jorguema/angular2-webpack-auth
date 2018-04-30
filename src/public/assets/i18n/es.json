@@ -1,0 +1,14 @@
+{
+    "LOGIN": "Login",
+    "PASSWORD": "Password",
+    "LOG_IN": "Log in",
+    "LOG_OUT": "Log out",
+    "ERR_USER_PSW": "Usuario o password incorrectos",
+    "ERR_USER_DATA": "No se ha podido obtener información del usuario",
+
+    "CONTRY_ID": "Id",
+    "CONTRY_CODE": "Código",
+    "CONTRY_DESCRIPTION": "Descripción",
+    "CONTRY_TYPE_ID": "Type id",
+    "CONTRY_TYPE_CODE": "Type code"
+}

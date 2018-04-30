@@ -1,0 +1,29 @@
+<div id="login-container" class="container">
+    <div class="row">
+        <div class="login">
+            <div class="login__box card">
+                <div class="card-image login__box_usr">
+                    <img src="/assets/img/usr.svg">
+                </div>
+                <div class="card-content login_box_form">
+                    <form name="login-form">
+                        <div class="input-field">
+                            <input id="last_name" type="text" class="validate" name="username" [(ngModel)]="model.username" (keyup.enter)="login(model.username, model.password)">
+                            <label for="last_name">{{'Login' | translate}}</label>
+                        </div>
+                        <div class="input-field">
+                            <input id="password" type="password" class="validate" name="password" [(ngModel)]="model.password" (keyup.enter)="login(model.username, model.password)">
+                            <label for="password">{{'Password'|translate}}</label>
+                        </div>
+                        <div class="login__box_button">
+                            <button type="button" class="waves-effect waves-light btn" [disabled]="loading" (click)="login(model.username, model.password)">{{'LOG_IN'|translate}}</button>
+                        </div>
+                        <div>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

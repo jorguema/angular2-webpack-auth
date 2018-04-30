@@ -1,0 +1,13 @@
+<header class="nav" [hidden]="hideHeader()">
+    <nav class="nav__fixed">
+        <div class="nav-wrapper">
+            <img class="nav__fixed_logo clickable" src="/assets/img/grm.svg" alt="Logo" [routerLink]="['']">
+
+            <ul class="right hide-on-med-and-down nav__fixed_options">
+                <li>
+                    <a (click)="logout()">{{'LOG_OUT' | translate}}</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</header>

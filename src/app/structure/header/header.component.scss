@@ -1,0 +1,33 @@
+@import "src/style/bem/bem-sass";
+@import "src/style/common/variables";
+@import "src/style/common/fonts";
+
+
+
+@include block('nav') {
+     @include element('fixed') {
+        height: 64px;
+        background-color: $background-section;
+        position: fixed;
+        top: 0;
+        z-index: 999;
+
+        @include modifier('logo') {
+            position: relative;
+            margin: 0 20px;
+            height: 64px;
+            padding: 8px;
+            max-height: 64px;
+            img {
+                max-width: initial;
+            }
+        }
+
+        @include modifier('options') {
+            li a{
+                color: $color-acent-hover;
+                font-size: 14px;
+            }
+        }
+     }
+}

@@ -1,0 +1,144 @@
+// ========================================
+// 
+//       Functions - BEM-SASS Struct
+//
+// =======================================
+
+// Getter: bem-sass struct 
+// @author  Yum<ym.jsng@gmail.com>
+// @access  public
+// @return {Map}
+@function bem-sass() { 
+  @if not is-bem-sass-initialized() {
+    @return null;
+  } 
+  @return $__bem-sass__;
+}
+
+
+// Setter: bem-sass struct
+// @author  Yum<ym.jsng@gmail.com>
+// @access  public
+// @param   {*} $value 
+// @return  {Boolean}
+@function set-bem-sass($value) {
+  @if not is-bem-sass-initialized() {
+    @error "bem-sass is not initialized";
+  } 
+  $__bem-sass__: $value !global;
+  @return true;
+} 
+
+
+// Check if a value exists in a bem-sass struct attribute
+// @author  Yum<ym.jsng@gmail.com>
+// @access  public
+// @param  {String} $attr
+// @param  {*} $value 
+// @return { Boolean }
+@function bem-sass-exists($attr, $value) {
+  @each $item in bem-sass-get($attr) {
+    @if $item == $value {
+      @return true;
+    }
+  }
+  @return false;
+}
+
+
+// Get a bem-sass attribute
+// @author  Yum<ym.jsng@gmail.com>
+// @access  public
+// @param  {Argument List} $attrs 
+// @return {*} the attribute
+@function bem-sass-get($attrs...) {
+  @return (
+    is-bem-sass-initialized() and 
+    map-deep-get(bem-sass(), $attrs...)
+  );
+} 
+
+
+// Set value to a bem-sass attribute
+// @author  Yum<ym.jsng@gmail.com>
+// @access  public
+// @param   {List} $attrs - attribute as list
+// @param   {*} $value 
+// @return  {Boolean} 
+@function bem-sass-set($attrs, $value) {
+  @if (set-bem-sass(map-deep-set(bem-sass(), $attrs, $value))) {
+    @return true;
+  } @else {
+    @return false;
+  }
+}
+
+
+// Add element to bem-sass attribute(list)
+// @author  Yum<ym.jsng@gmail.com>
+// @access  public
+// @param   {String} $attr - attribute name
+// @param   {*} $value
+// @param   {Boolean} $strict - (true: exclude null)
+// @return  {Boolean}
+@function bem-sass-add($attr, $value, $strict: false) {
+
+  @if type-of(bem-sass-get($attr)) != "list" {
+    @error "#{$attr} is not a list";
+  }
+
+  @if type-of($value) == "string" {
+    $value: unquote($value);
+  }
+
+  @if (
+   not $strict
+   and bem-sass-set($attr, append(bem-sass-get($attr), $value))
+  ) {}
+
+  @return true;
+
+} 
+
+
+// Check if bem-sass is initialized or not
+// @author  Yum<ym.jsng@gmail.com>
+// @access  public
+// @return  {Boolean}
+@function is-bem-sass-initialized() {
+  @if (variable-exists("__bem-sass__")) {
+    @return true;
+  } 
+  @return false;
+}
+
+// Check if bem-sass is configured or not
+// @author  Yum<ym.jsng@gmail.com>
+// @access  public
+// @return  {Boolean}
+@function is-bem-sass-configured() {
+  @if (bem-sass-get("state", "configured")) {
+    @return true;
+  }
+  @return false;
+} 
+
+// Check if the given level has valid order or not
+// @author  Yum<ym.jsng@gmail.com>
+// @access  public
+// @return  {Boolean}
+@function validate-block-level-order($level, $name: "") { 
+  @if length(bem-sass-get("logged-block-levels")) > 0 {
+    $index-levels: map-keys(bem-sass-get("config", "block-levels"));
+    $lastest-level: nth(
+      bem-sass-get("logged-block-levels"), 
+      length(bem-sass-get("logged-block-levels"))
+    );
+    $index-current: index($index-levels, $level);
+    $index-lastest: index($index-levels, $lastest-level);
+    @if $index-current < $index-lastest {
+      @error "the `#{$level}` level block `#{$name}` should not be behind of any `#{$lastest-level}` level blocks. Your block levels are: #{$index-levels}";
+    }
+  }
+  @return null;
+}

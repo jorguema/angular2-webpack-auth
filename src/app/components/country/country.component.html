@@ -1,0 +1,28 @@
+<div class="row">
+    <div class="col s12">
+        <h2>countries pending develop</h2>
+    </div>  
+
+    <div class="col s12 card">
+        <table class="highlight">
+            <thead>
+                <tr>
+                    <th>{{'CONTRY_ID'|translate}}</th>
+                    <th>{{'CONTRY_CODE'|translate}}</th>
+                    <th>{{'CONTRY_DESCRIPTION'|translate}}</th>
+                    <th>{{'CONTRY_TYPE_ID'|translate}}</th>
+                    <th>{{'CONTRY_TYPE_CODE'|translate}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let country of countries">
+                    <td>{{country.id}}</td>
+                    <td>{{country.code}}</td>
+                    <td>{{country.description}}</td>
+                    <td>{{country.typeId}}</td>
+                    <td>{{country.typeCode}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

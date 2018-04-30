@@ -1,0 +1,61 @@
+<my-header></my-header>
+<my-sidebar></my-sidebar>
+<div class="home-section">
+        <form>
+                <div class="form-group">
+                  <label for="exampleInputEmail1">Email address</label>
+                  <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                  <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                </div>
+                <div class="form-group">
+                  <label for="exampleInputPassword1">Password</label>
+                  <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                </div>
+                <div class="form-check">
+                  <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                  <label class="form-check-label" for="exampleCheck1">Check me out</label>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </form>
+              
+    <!-- <div class="row">
+        <div class="col s12">
+            <ul class="tabs" materialize="tabs">
+                <li class="tab col s3">
+                    <a href="#test1">Test 1</a>
+                </li>
+                <li class="tab col s3">
+                    <a href="#test2">Test 2</a>
+                </li>
+                <li class="tab col s3">
+                    <a href="#test3">Test 3</a>
+                </li>
+            </ul>
+        </div>
+        <div id="test1" class="col s12">Test 1</div>
+        <div id="test2" class="col s12">Test 2</div>
+        <div id="test3" class="col s12">Test 4</div>
+    </div>
+
+    <input name="nametab" ngModel required #nametab="ngModel" />
+    <button (click)="addTab(nametab.value)">addtab</button>
+
+    <div class="row" [hidden]="tabs.length==0">
+        <div class="col s12">
+            <ul class="tabs" materialize="tabs">
+                <li class="tab" *ngFor="let tab of tabs">
+                    <a href="#{{tab.title}}">{{tab.title}}</a>
+                </li>
+            </ul>
+        </div>
+
+        <div id="wrapper-content">
+            <div [innerHTML] *ngFor="let tab of tabs" id="{{tab.title}}" class="col s12">
+                <ng-template>{{tab.content}}</ng-template>
+            </div>
+        </div>
+    </div> -->
+
+    <router-outlet></router-outlet>
+</div>
+<my-footer></my-footer>

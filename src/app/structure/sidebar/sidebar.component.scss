@@ -1,0 +1,28 @@
+@import "src/style/bem/bem-sass";
+@import "src/style/common/variables";
+
+@include block('aside') {
+    position: fixed;    
+    height: 100%;
+    top: 0;
+    left: 0;
+    width: 225px;
+    background-color: $background-section;
+    z-index: 2;
+
+    @include element('ul') {
+      list-style: none;
+      margin-top: 70px;
+      padding: 10px;
+
+        @include modifier('link') {
+            span{
+                position: relative;
+                top: -6px;
+                left: 9px;
+                font-size: 17px;
+            }
+        }
+    }
+  }
+  
