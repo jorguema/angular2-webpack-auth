@@ -1,6 +1,4 @@
 import { Injectable } from '@angular/core';
-
-import { RequestService, TokenService } from '@grm-tfs-repository/token-service';
 import { LocalStorageService } from './local-storage.service';
 
 import { Endpoints } from '../../environments/endpoints';

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class GlobalConfig {
-    private readonly rome = "rome";
+    private readonly xxxx = "xxx";
     clientName: string = null;
     token: string = null;
 
@@ -20,7 +20,7 @@ export class GlobalConfig {
 
     private hideSection(): boolean {
         if (!this.clientName) return false;
-        if (this.clientName == this.rome) return true;
+        if (this.clientName == this.xxxx) return true;
         return false;
     }
 

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { RequestService } from '@grm-tfs-repository/token-service';
 
 import { Port, PortHelper } from '../models/port.model';
 import { Endpoints } from '../../environments/endpoints';

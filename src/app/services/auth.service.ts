@@ -2,7 +2,6 @@ import { CanActivate, Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 
 import { LocalStorageService } from './local-storage.service';
-import { RequestService } from '@grm-tfs-repository/token-service';
 
 @Injectable()
 export class AuthService implements CanActivate {
